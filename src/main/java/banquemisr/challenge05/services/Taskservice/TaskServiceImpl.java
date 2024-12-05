@@ -27,22 +27,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
-    @Autowired
-	private  TaskRepository taskRepository;
-    @Autowired
-	private  NotificationService notificationService;
-    @Autowired
-	private  UserRepository userRepository;
+	@Autowired
+	private TaskRepository taskRepository;
+	@Autowired
+	private NotificationService notificationService;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	public Task createTask(TaskDTO taskDTO) {
 		String loggedInUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		User loggedInUser = userRepository.findByUsername(loggedInUsername)
+		Long loggedInUserId = userRepository.findIdByUsername(loggedInUsername)
 				.orElseThrow(() -> new TaskNotFoundException("Logged-in user not found"));
 
-		User assignedToUser = userRepository.findById(taskDTO.getAssignedToId())
-				.orElseThrow(() -> new TaskNotFoundException("Assigned user not found"));
+		Long assignedToUserId = taskDTO.getAssignedToId(); //
 
 		Task task = new Task();
 		task.setTitle(taskDTO.getTitle());
@@ -50,8 +49,8 @@ public class TaskServiceImpl implements TaskService {
 		task.setDueDate(taskDTO.getDueDate());
 		task.setStatus(taskDTO.getStatus());
 		task.setPriority(taskDTO.getPriority());
-		task.setAssignedBy(loggedInUser);
-		task.setAssignedTo(assignedToUser);
+		task.setAssignedBy(new User(loggedInUserId)); //
+		task.setAssignedTo(new User(assignedToUserId)); //
 
 		return taskRepository.save(task);
 	}
@@ -66,12 +65,12 @@ public class TaskServiceImpl implements TaskService {
 		return taskRepository.findById(id);
 	}
 
-	@Override
 	public ResponseEntity<Task> updateTask(Long id, Task task) {
 		String loggedInUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		User loggedInUser = userRepository.findByUsername(loggedInUsername)
+		Long loggedInUserId = userRepository.findIdByUsername(loggedInUsername)
 				.orElseThrow(() -> new TaskNotFoundException("Logged-in user not found"));
+
 		Task updatedTask = taskRepository.findById(id).map(existingTask -> {
 			existingTask.setTitle(task.getTitle());
 			existingTask.setDescription(task.getDescription());
@@ -79,8 +78,13 @@ public class TaskServiceImpl implements TaskService {
 			existingTask.setPriority(task.getPriority());
 			existingTask.setDueDate(task.getDueDate());
 
+			existingTask.setAssignedBy(new User(loggedInUserId)); //
+			// existingTask.setAssignedTo(new User(task.getAssignedTo().getId())); //
+
 			Task savedTask = taskRepository.save(existingTask);
-			notificationService.sendUpdateNotification(savedTask, loggedInUser);
+
+			notificationService.sendUpdateNotification(savedTask, new User(loggedInUserId));
+
 			return savedTask;
 		}).orElseThrow(() -> new TaskNotFoundException("Task not found with ID: " + id));
 
