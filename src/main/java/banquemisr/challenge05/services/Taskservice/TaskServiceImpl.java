@@ -79,7 +79,6 @@ public class TaskServiceImpl implements TaskService {
 			existingTask.setDueDate(task.getDueDate());
 
 			existingTask.setAssignedBy(new User(loggedInUserId)); //
-			// existingTask.setAssignedTo(new User(task.getAssignedTo().getId())); //
 
 			Task savedTask = taskRepository.save(existingTask);
 
