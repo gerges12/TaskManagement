@@ -7,7 +7,7 @@ This application includes functionality such as:
 Task creation, editing, and deletion.
 Sending task-related notifications via email using SMTP.
 Storing task history with status updates.
-Handling attachments related to tasks.
+
 Prerequisites
 Ensure that the following tools and technologies are installed:
 
@@ -89,6 +89,18 @@ CREATE TABLE notifications (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+Sequences Used in the Project
+notification_sequence: Used for the id field in the Notification table.
+CREATE SEQUENCE notification_sequence START WITH 1 INCREMENT BY 1;
+
+task_sequence: Used for the id field in the Task table.
+CREATE SEQUENCE task_sequence START WITH 1 INCREMENT BY 1;
+
+history_sequence: Used for the id field in the User table.
+CREATE SEQUENCE history_sequence START WITH 1 INCREMENT BY 1;
+
+
 3. Postman Collection
 You can interact with the API using the provided Postman collection. It includes all the necessary endpoints for:
 
