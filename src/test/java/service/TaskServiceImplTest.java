@@ -1,15 +1,5 @@
 package service;
 
-import com.dto.TaskDTO;
-import com.models.Task;
-import com.models.User;
-import com.models.enums.Priority;
-import com.models.enums.Status;
-import com.repository.TaskRepository;
-import com.repository.UserRepository;
-import com.services.NotificationService.NotificationService;
-import com.services.Taskservice.TaskServiceImpl;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +7,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import banquemisr.challenge05.dto.TaskDTO;
+import banquemisr.challenge05.models.Task;
+import banquemisr.challenge05.models.User;
+import banquemisr.challenge05.models.enums.Priority;
+import banquemisr.challenge05.models.enums.Status;
+import banquemisr.challenge05.repository.TaskRepository;
+import banquemisr.challenge05.repository.UserRepository;
+import banquemisr.challenge05.services.NotificationService.NotificationService;
+import banquemisr.challenge05.services.Taskservice.TaskServiceImpl;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
